@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_puthexa.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lribette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/15 12:46:28 by lribette          #+#    #+#             */
-/*   Updated: 2024/01/16 14:34:43 by lribette         ###   ########.fr       */
+/*   Created: 2023/11/02 18:53:35 by lribette          #+#    #+#             */
+/*   Updated: 2023/11/03 14:17:15 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "ft_printf.h"
 
-# include <unistd.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <stdlib.h>
-# include <signal.h>
-# include <fcntl.h>
+int	ft_puthexa(unsigned int n, char *s)
+{
+	int	len;
 
-#endif
+	len = 0;
+	if (n > 15)
+	{
+		len += ft_puthexa(n / 16, s);
+		len += ft_puthexa(n % 16, s);
+	}
+	else
+		len += ft_putchar(s[n % 16]);
+	return (len);
+}

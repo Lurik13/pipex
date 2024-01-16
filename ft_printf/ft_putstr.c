@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_putstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lribette <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/15 12:46:28 by lribette          #+#    #+#             */
-/*   Updated: 2024/01/16 14:34:43 by lribette         ###   ########.fr       */
+/*   Created: 2023/11/02 13:54:40 by lribette          #+#    #+#             */
+/*   Updated: 2023/11/03 14:49:05 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "ft_printf.h"
 
-# include <unistd.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <stdlib.h>
-# include <signal.h>
-# include <fcntl.h>
+int	ft_putstr(const char *s)
+{
+	int	i;
 
-#endif
+	i = -1;
+	if (s == NULL)
+	{
+		write(1, "(null)", 6);
+		return (6);
+	}
+	while (s[++i])
+		write(1, &s[i], 1);
+	return (i);
+}
