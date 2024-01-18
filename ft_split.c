@@ -6,78 +6,104 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:19:02 by lribette          #+#    #+#             */
-/*   Updated: 2024/01/16 14:19:37 by lribette         ###   ########.fr       */
+/*   Updated: 2024/01/18 16:58:51 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <pipex.h>
+#include "pipex.h"
 
-int	is_space(char c)
-{
-	if ((c >= 9 && c <= 13) || c == 32)
-		return (1);
-	return (0);
-}
-
-int	words_count(char *str)
+static int	ft_strlen(char *str)
 {
 	int	i;
-	int	number_of_words;
 
 	i = 0;
-	number_of_words = 0;
 	while (str[i])
+		i++;
+	return (i);
+}
+
+static int	ft_count_words(char *s, char c)
+{
+	unsigned int	number;
+	unsigned int	i;
+	unsigned int	isword;
+
+	number = 0;
+	i = -1;
+	isword = 0;
+	while (s[++i])
 	{
-		while (str[i] && is_space(str[i]))
-			i++;
-		while (str[i] && !is_space(str[i]))
-			i++;
-		if (!str[i] && is_space(str[i - 1]))
-			continue ;
-		else
-			number_of_words++;
+		if (s[i] != c && isword == 0)
+		{
+			number++;
+			isword = 1;
+		}
+		else if (s[i] == c && isword == 1)
+			isword = 0;
 	}
-	return (number_of_words);
+	return (number);
 }
 
-char	*ft_word_dup(char *str, int start, int end)
+static char	*ft_worddup(char *s, int start, int end)
 {
+	char	*word;
 	int		i;
-	char	*dup;
-	
+
 	i = 0;
-	dup = malloc((end - start + 1) * sizeof(char));
-	if (!dup)
-		return (NULL);
-	while (end > start)
-		dup[i++] = str[start++];
-	dup[i] = '\0';
-	return (dup);
+	word = malloc((end - start + 1) * sizeof(char));
+	while (start < end)
+		word[i++] = s[start++];
+	word[i] = '\0';
+	return (word);
 }
 
-char	**ft_split(char *str)
+char	**ft_split(char *s, char c)
 {
+	char	**split;
 	int		i;
 	int		j;
-	int		start;
-	char	**split;
+	int		index;
 
-	i = 0;
-	j = -1;
-	start = 0;
-	split = malloc((words_count(str) + 1) * sizeof(char *));
-	if (!split)
+	split = malloc((ft_count_words(s, c) + 1) * sizeof(char *));
+	if (!s || !split)
 		return (NULL);
-	while (++j < words_count(str))
+	i = -1;
+	j = 0;
+	index = -1;
+	while (++i <= ft_strlen(s))
 	{
-		while (str[i] && is_space(str[i]))
-			i++;
-		if (str[i])
-			start = i;
-		while (str[i] && !is_space(str[i]))
-			i++;
-		split[j] = ft_word_dup(str, start, i);
+		if (s[i] != c && index < 0)
+			index = i;
+		else if ((s[i] == c || i == ft_strlen(s)) && index >= 0)
+		{
+			split[j++] = ft_worddup(s, index, i);
+			index = -1;
+		}
 	}
-	split[j] = NULL;
+	split[j] = 0;
 	return (split);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	size_t	len_s1;
+	size_t	len_s2;
+	size_t	i;
+	size_t	j;
+	char	*str;
+
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	i = -1;
+	j = -1;
+	str = malloc(len_s1 + len_s2 + 1);
+	if (!str)
+		return (NULL);
+	while (s1[++i])
+		str[i] = s1[i];
+	while (s2[++j])
+		str[i + j] = s2[j];
+	str[i + j] = '\0';
+	free(s1);
+	return (str);
 }
