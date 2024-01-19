@@ -6,12 +6,15 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:46:28 by lribette          #+#    #+#             */
-/*   Updated: 2024/01/18 18:20:32 by lribette         ###   ########.fr       */
+/*   Updated: 2024/01/19 19:16:43 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
+
+#  define READING 0
+#  define WRITING 1
 
 # include <unistd.h>
 # include <sys/types.h>
@@ -29,6 +32,7 @@ typedef struct s_arg
 	char	**cmd;
 	char	**envp;
 	int		out;
+	int		stdout_backup;
 }	t_arg;
 
 char	**ft_split(char *s, char c);

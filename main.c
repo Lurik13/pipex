@@ -6,17 +6,17 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:27:37 by lribette          #+#    #+#             */
-/*   Updated: 2024/01/18 19:10:15 by lribette         ###   ########.fr       */
+/*   Updated: 2024/01/19 19:42:02 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	check_files(char *argv)
+int check_files(char *argv)
 {
 	int		fd;
 
-	fd = open(argv, O_RDONLY);
+	fd = open(argv, O_RDONLY, 0666);
 	if (fd == -1)
 	{
 		ft_printf("Invalid file\n");
@@ -52,18 +52,36 @@ void	search_path(t_arg *args)
 	}
 }
 
-void	child(int *pipefd, t_arg *args)
+void	first_child(int *pipefd, t_arg *args)
 {
 	int		i;
 
 	i = 0;
-	close(pipefd[1]);
-	dup2(args->in, STDIN_FILENO);
+	close(pipefd[READING]);
+	if (dup2(args->in, STDIN_FILENO) == -1 || dup2(pipefd[WRITING], STDOUT_FILENO) == -1)
+		dprintf(2, "dup error First\n");
+	close(pipefd[WRITING]);
+	close(args->in);
 	while (args->path[i])
 		execve(args->path[i++], args->cmd, args->envp);
-	//dup2(args->out, STDOUT_FILENO);
-	close(pipefd[0]);
-	exit(0);
+	perror("Invalid command");
+	exit(EXIT_FAILURE);
+}
+
+void	last_child(int *pipefd, t_arg *args)
+{
+	int		i;
+
+	i = 0;
+	close(pipefd[WRITING]);
+	if (dup2(pipefd[READING], STDIN_FILENO) == -1 || dup2(args->out, STDOUT_FILENO) == -1)
+		dprintf(2, "dup error Last\n");
+	close(pipefd[READING]);
+	close(args->out);
+	while (args->path[i])
+		execve(args->path[i++], args->cmd, args->envp);
+	perror("Invalid command");
+	exit(EXIT_FAILURE);
 }
 
 void	ft_free(t_arg *args)
@@ -82,32 +100,39 @@ void	ft_free(t_arg *args)
 
 void	creating_pipes(int argc, char **argv, t_arg *args)
 {
-	(void)argc;
 	int		pipefd[2];
-	pid_t	pid;
-	int		status;
+	pid_t	pid[2];
+	int		i;
 	
 	if (pipe(pipefd) == -1)
 	{
 		perror("Pipe");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
-	args->cmd = ft_split(argv[2], ' ');
-	search_path(args);
-	ft_printf("Fork\n");
-	pid = fork();
-	if (pid == -1)
-		exit(1);
-	if (pid == 0)
-		child(pipefd, args);
-	else if (pid > 0)
+	i = 0;
+	while (i < argc - 3)
 	{
-		close(pipefd[0]);
-		close(pipefd[1]);
-		waitpid(pid, &status, 0);
+		ft_printf("Fork n%d\n", i);
+		args->cmd = ft_split(argv[i + 2], ' ');
+		search_path(args);
+		pid[i] = fork();
+		if (pid[i] == -1)
+			exit(EXIT_FAILURE);
+		if (pid[i] == 0)
+		{
+			if (i + 1 < argc - 3)
+				first_child(pipefd, args);
+			else
+				last_child(pipefd, args);	
+		}		
 		ft_free(args);
-		exit(0);
+		i++;
 	}
+	i = 0;
+	close(pipefd[0]);
+	close(pipefd[1]);
+	while (i++ < argc - 3)
+		wait(NULL);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -117,28 +142,23 @@ int	main(int argc, char **argv, char **envp)
 	if (argc > 3)
 	{
 		args.in = check_files(argv[1]);
-		args.out = check_files(argv[argc - 1]);
-		/*args.in = argv[1];
-		args.out = argv[argc - 1];*/
+		args.out = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0666);
+		if (args.out == -1)
+		{
+			ft_printf("Invalid outfile\n");
+			exit(1);
+		}
 		args.envp = envp;
 		creating_pipes(argc, argv, &args);
-		
-		/*int	i = 0;
-		while (args.cmd[i])
-		{
-			//ft_printf("%s\n\n\n", envp[i]);
-			args.path = search_path(envp);
-			int	j = 0;
-			while (args.path[j])
-				ft_printf("%s\n", args.path[j++]);
-			i++;
-		}
-		printf("C'est bon\n");*/
-		/*if (execve(argv[2], argv, envp) == -1)
-			perror("Can't execve");*/
-		/*close(fd1);
-		close(fd2);*/
 	}
 	else
 		ft_printf("Wrong number of args\n");
 }
+
+
+//env -i ./pipex text.txt "cat -e" "wc -l" ici.txt
+// il faut regarder si Path existe ou non dans envp
+
+//prendre en compte s'il n'y a pas de pipe a faire
+
+//faire le premier bonus
