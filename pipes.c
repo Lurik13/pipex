@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/21 10:59:07 by lribette          #+#    #+#             */
-/*   Updated: 2024/01/21 16:28:54 by lribette         ###   ########.fr       */
+/*   Updated: 2024/01/21 18:12:49 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	_ft_fork(t_arg *args, int i, int argc, int *pipefd)
 	}
 }
 
-/*void	creating_pipes(int argc, char **argv, t_arg *args)
+void	creating_pipes(int argc, char **argv, t_arg *args)
 {
 	int		pipefd[2];
 	int		i;
@@ -62,9 +62,9 @@ static void	_ft_fork(t_arg *args, int i, int argc, int *pipefd)
 		ft_printf("\x1b[38;2;255;0;0mClosed %d\e[0m\n", i + 1);
 		i++;
 	}
-}*/
+}
 
-void	creating_pipes(int argc, char **argv, t_arg *args)
+/*void	creating_pipes(int argc, char **argv, t_arg *args)
 {
 	int		pipefd[2];
 	int		i;
@@ -94,4 +94,4 @@ void	creating_pipes(int argc, char **argv, t_arg *args)
 		ft_printf("\x1b[38;2;255;0;0mClosed %d\e[0m\n", i + 1);
 		i++;
 	}
-}
+}*/
