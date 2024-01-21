@@ -1,8 +1,0 @@
-gsd$
-gdfs$
-tte/bin/cat
-/usr/local/cuda/bin/cat
-/usr/local/sbin/cat
-/usr/local/bin/cat
-/usr/sbin/cat
-/usr/bin/cat
