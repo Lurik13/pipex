@@ -6,13 +6,13 @@
 #    By: lribette <lribette@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/11 17:27:08 by lribette          #+#    #+#              #
-#    Updated: 2024/01/19 14:01:57 by lribette         ###   ########.fr        #
+#    Updated: 2024/01/21 11:00:45 by lribette         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
-SOURCES = ft_split.c main.c
+SOURCES = childs.c ft_split.c main.c pipes.c search_path.c 
 
 OBJECTS = $(SOURCES:.c=.o)
 
