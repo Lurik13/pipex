@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:46:28 by lribette          #+#    #+#             */
-/*   Updated: 2024/01/21 11:02:49 by lribette         ###   ########.fr       */
+/*   Updated: 2024/01/21 15:22:26 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,15 @@ typedef struct s_arg
 	char	**cmd;
 	char	**envp;
 	int		out;
-	int		stdout_backup;
 }	t_arg;
 
 int		ft_strlen(char *str);
 char	**ft_split(char *s, char c);
 void	search_path(t_arg *args);
 void	creating_pipes(int argc, char **argv, t_arg *args);
+void	only_one_command(int *pipefd, t_arg *args);
 void	first_child(int *pipefd, t_arg *args);
+void	middle_child(int *pipefd, t_arg *args);
 void	last_child(int *pipefd, t_arg *args);
 void	ft_free(t_arg *args);
 

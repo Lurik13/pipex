@@ -6,7 +6,7 @@
 /*   By: lribette <lribette@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/11 17:27:37 by lribette          #+#    #+#             */
-/*   Updated: 2024/01/21 11:16:25 by lribette         ###   ########.fr       */
+/*   Updated: 2024/01/21 11:37:34 by lribette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	_check_files(int argc, char **argv, t_arg *args)
 	args->out = open(argv[argc - 1], O_WRONLY | O_TRUNC | O_CREAT, 0666);
 	if (args->in == -1 || args->out == -1)
 	{
-		ft_printf("Invalid file\n");
+		perror("Invalid file");
 		exit(1);
 	}
 }
